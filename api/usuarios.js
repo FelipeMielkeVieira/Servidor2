@@ -1,11 +1,17 @@
 const express = require("express");
 const router = express.Router();
 
-const boletos = require("./boletos");
-
 router.use(express.json());
 
-const usuarios = [];
+const usuarios = [
+    {
+        id: 1,
+        nome: "Felipe",
+        senha: "321"
+    }
+];
+
+const boletosUsuarios = []
 
 function mostrarUsuarios() {
     return usuarios;
@@ -35,6 +41,11 @@ function excluirUsuario(id) {
     return usuarios;
 }
 
+function pegarPorUsuario(id) {
+    const listaBoletos = boletosUsuarios.find(p => p.idUsuario == id);
+    return listaBoletos;
+}
+
 
 router.get('/', (req, res) => {
     res.json(mostrarUsuarios());
@@ -57,7 +68,7 @@ router.put('/:id', (req, res) => {
 })
 
 router.delete('/:id', (req, res) => {
-    if(boletos.pegarPorUsuario(req.params.id).length > 0) {
+    if(pegarPorUsuario(req.params.id).length > 0) {
         res.status(400).send("Este usuário tem boletos em seu nome!")
     } else {
         res.json(excluirUsuario(req.params.id));
@@ -66,6 +77,7 @@ router.delete('/:id', (req, res) => {
 
 module.exports = {
     router,
+    boletosUsuarios,
     mostrarUsuario,
     mostrarUsuarios
 }

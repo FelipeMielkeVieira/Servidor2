@@ -1,11 +1,17 @@
 const express = require("express");
 const router = express.Router();
 
-const boletos = require("./boletos");
-
 router.use(express.json());
 
-const pessoas = [];
+const pessoas = [
+    {
+        id: 1,
+        nome: "Felipe",
+        cpf: "123"
+    }
+];
+
+const boletosPessoas = []
 
 function mostrarPessoas() {
     return pessoas;
@@ -35,6 +41,11 @@ function excluirPessoa(id) {
     return pessoas;
 }
 
+function pegarPorPessoa(id) {
+    const listaBoletos = boletosPessoas.find(p => p.idPessoa == id);
+    return listaBoletos;
+}
+
 
 router.get('/', (req, res) => {
     res.json(mostrarPessoas());
@@ -57,7 +68,7 @@ router.put('/:id', (req, res) => {
 })
 
 router.delete('/:id', (req, res) => {
-    if(boletos.pegarPorPessoa(req.params.id)) {
+    if(pegarPorPessoa(req.params.id)) {
         res.status(400).send("Esta pessoa tem boletos em seu nome!")
     } else {
         res.json(excluirPessoa(req.params.id));
@@ -66,6 +77,7 @@ router.delete('/:id', (req, res) => {
 
 module.exports = {
     router,
+    boletosPessoas,
     mostrarPessoa,
     mostrarPessoas
 }

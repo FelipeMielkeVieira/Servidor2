@@ -34,9 +34,15 @@ function buscarUsuario(id) {
     return usuario.mostrarUsuario(id);
 }
 
-function criarBoleto(boleto) {
+function criarBoletoPessoa(boleto) {
     boleto.id = boletos.length + 1;
-    boletos.push(boleto);
+    pessoa.boletosPessoas.push(boleto);
+    return boleto; 
+}
+
+function criarBoletoUsuario(boleto) {
+    boleto.id = boletos.length + 1;
+    usuario.boletosUsuarios.push(boleto);
     return boleto; 
 }
 
@@ -57,13 +63,13 @@ router.post('/', (req, res) => {
     if(req.body.valor > 0) {
         if(req.body.idPessoa) {
             if(buscarPessoa(req.body.idPessoa) != null) {
-                res.send(criarBoleto(req.body));
+                res.send(criarBoletoPessoa(req.body));
             } else {
                 res.status(400).send("Pessoa Inválida!");
             }
         } else {
             if(buscarUsuario(req.body.idUsuario) != null) {
-                res.send(criarBoleto(req.body));
+                res.send(criarBoletoUsuario(req.body));
             } else {
                 res.status(400).send("Usuário Inválido!");
             }
@@ -75,10 +81,6 @@ router.post('/', (req, res) => {
 
 module.exports = {
     router,
-    mostrarBoletos,
-    mostrarBoleto,
     pegarPorPessoa,
-    buscarPessoa,
-    buscarUsuario,
     pegarPorUsuario
 }
