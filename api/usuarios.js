@@ -16,6 +16,25 @@ function mostrarUsuario(id) {
     return usuario;
 }
 
+function criarUsuario(usuario) {
+    usuario.id = usuarios.length + 1;
+    usuarios.push(usuario);
+    return usuario;
+}
+
+function editarUsuario(id, usuario) {
+    const index = usuarios.findIndex(p => p.id == id);
+    usuario.id = id;
+    usuarios[index] = usuario;
+    return usuario;
+}
+
+function excluirUsuario(id) {
+    const index = usuarios.findIndex(p => p.id == id);
+    usuarios.splice(index, 1);
+    return usuarios;
+}
+
 
 router.get('/', (req, res) => {
     res.json(mostrarUsuarios());
@@ -29,30 +48,19 @@ router.post('/', (req, res) => {
     if(req.body.senha == undefined || req.body.nome == undefined) {
         res.status(400).send("Nome e Senha são obrigatórios!");
     } else {
-        const usuario = req.body;
-        usuario.id = usuarios.length + 1;
-        usuarios.push(usuario);
-        res.json(usuario);
+        res.json(criarUsuario(req.body));
     }
 })
 
 router.put('/:id', (req, res) => {
-    const id = req.params.id;
-    const usuario = req.body;
-    const index = usuarios.findIndex(p => p.id == id);
-    usuarios[index] = usuario;
-    res.json(usuario);
+    res.json(editarUsuario(req.params.id, req.body));
 })
 
 router.delete('/:id', (req, res) => {
-    const id = req.params.id;
-
-    if(boletos.pegarPorUsuario(id).length > 0) {
+    if(boletos.pegarPorUsuario(req.params.id).length > 0) {
         res.status(400).send("Este usuário tem boletos em seu nome!")
     } else {
-        const index = usuarios.findIndex(p => p.id == id);
-        usuarios.splice(index, 1);
-        res.json(usuarios);
+        res.json(excluirUsuario(req.params.id));
     }
 })
 

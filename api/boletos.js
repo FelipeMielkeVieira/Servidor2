@@ -34,6 +34,12 @@ function buscarUsuario(id) {
     return usuario.mostrarUsuario(id);
 }
 
+function criarBoleto(boleto) {
+    boleto.id = boletos.length + 1;
+    boletos.push(boleto);
+    return boleto; 
+}
+
 
 router.get('/', (req, res) => {
     res.json(mostrarBoletos());
@@ -48,22 +54,16 @@ router.get('/pessoa/:id', (req, res) => {
 });
 
 router.post('/', (req, res) => {
-    const boleto = req.body;
-
-    if(boleto.valor > 0) {
-        if(boleto.idPessoa) {
-            if(buscarPessoa(boleto.idPessoa) != null) {
-                boleto.id = boletos.length + 1;
-                boletos.push(boleto);
-                res.send(boleto);
+    if(req.body.valor > 0) {
+        if(req.body.idPessoa) {
+            if(buscarPessoa(req.body.idPessoa) != null) {
+                res.send(criarBoleto(req.body));
             } else {
                 res.status(400).send("Pessoa Inválida!");
             }
         } else {
-            if(buscarUsuario(boleto.idUsuario) != null) {
-                boleto.id = boletos.length + 1;
-                boletos.push(boleto);
-                res.send(boleto);
+            if(buscarUsuario(req.body.idUsuario) != null) {
+                res.send(criarBoleto(req.body));
             } else {
                 res.status(400).send("Usuário Inválido!");
             }
