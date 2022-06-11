@@ -11,7 +11,7 @@ const pessoas = [
     }
 ];
 
-const boletosPessoas = []
+const boletosPessoas = [];
 
 function mostrarPessoas() {
     return pessoas;

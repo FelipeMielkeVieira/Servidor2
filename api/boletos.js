@@ -5,23 +5,46 @@ const usuario = require("./usuarios");
 
 router.use(express.json());
 
-const boletos = [];
-
 function mostrarBoletos() {
+    const boletos = [];
+    pessoa.boletosPessoas.forEach(function (e) {
+        boletos.push(e);
+    })
+    usuario.boletosUsuarios.forEach(function (e) {
+        boletos.push(e);
+    })
+
     return boletos;
 }
 
 function mostrarBoleto(id) {
+    const boletos = [];
+    pessoa.boletosPessoas.forEach(function (e) {
+        boletos.push(e);
+    })
+    usuario.boletosUsuarios.forEach(function (e) {
+        boletos.push(e);
+    })
+
     const boleto = boletos.find(p => p.id == id);
     return boleto;
 }
 
 function pegarPorPessoa(id) {
+    const boletos = [];
+    pessoa.boletosPessoas.forEach(function (e) {
+        boletos.push(e);
+    })
+
     const listaBoletos = boletos.find(p => p.idPessoa == id);
     return listaBoletos;
 }
 
 function pegarPorUsuario(id) {
+    const boletos = [];
+    usuario.boletosUsuarios.forEach(function (e) {
+        boletos.push(e);
+    })
     const listaBoletos = boletos.find(p => p.idUsuario == id);
     return listaBoletos;
 }
@@ -35,12 +58,32 @@ function buscarUsuario(id) {
 }
 
 function criarBoletoPessoa(boleto) {
+    const boletos = [];
+    pessoa.boletosPessoas.forEach(function (e) {
+        boletos.push(e);
+    })
+    usuario.boletosUsuarios.forEach(function (e) {
+        boletos.push(e);
+    })
+
     boleto.id = boletos.length + 1;
+    boleto.status = "Em Aberto"
     pessoa.boletosPessoas.push(boleto);
+    boleto.nomePessoa = buscarPessoa(boleto.idPessoa).nome;
     return boleto; 
 }
 
 function criarBoletoUsuario(boleto) {
+    const boletos = [];
+    pessoa.boletosPessoas.forEach(function (e) {
+        boletos.push(e);
+    })
+    usuario.boletosUsuarios.forEach(function (e) {
+        boletos.push(e);
+    })
+
+    boleto.nomePessoa = buscarUsuario(boleto.idUsuario).nome;
+    boleto.status = "Em Aberto"
     boleto.id = boletos.length + 1;
     usuario.boletosUsuarios.push(boleto);
     return boleto; 
