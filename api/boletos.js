@@ -89,6 +89,31 @@ function criarBoletoUsuario(boleto) {
     return boleto; 
 }
 
+function editarBoleto(id, boleto) {
+    const boletos = [];
+    pessoa.boletosPessoas.forEach(function (e) {
+        boletos.push(e);
+    })
+    usuario.boletosUsuarios.forEach(function (e) {
+        boletos.push(e);
+    })
+
+    const boletoPessoa = boletos.find(p => p.idPessoa == id);
+    const boletoUsuario = boletos.find(p => p.idUsuario == id);
+    let index;
+
+    boleto.id = id;
+
+    if(boletoPessoa != null) {
+        index = pessoa.boletosPessoas.findIndex(p => p.idPessoa == id);
+        pessoa.boletosPessoas[index] = boleto;
+    } else {
+        index = usuario.boletosUsuarios.findIndex(p => p.idUsuario == id);
+        usuario.boletosUsuarios[index] = boleto;
+    }
+    return boleto;
+}
+
 
 router.get('/', (req, res) => {
     res.json(mostrarBoletos());
@@ -120,6 +145,10 @@ router.post('/', (req, res) => {
     } else {
         res.status(400).send("Valor Inválido!");
     }
+})
+
+router.put('/:id', (req, res) => {
+    res.send(editarBoleto(req.params.id, req.body))
 })
 
 module.exports = {
