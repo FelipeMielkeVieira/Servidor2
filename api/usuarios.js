@@ -6,9 +6,9 @@ router.use(express.json());
 
 const usuarios = [
     {
-        id: 1,
         nome: "Felipe",
-        senha: "321"
+        senha: "321",
+        id: 1
     }
 ];
 
@@ -67,7 +67,7 @@ router.put('/:id', (req, res) => {
 })
 
 router.delete('/:id', (req, res) => {
-    if(pegarPorUsuario(req.params.id).length > 0) {
+    if(pegarPorUsuario(req.params.id)) {
         res.status(400).send("Este usuário tem boletos em seu nome!")
     } else {
         res.json(excluirUsuario(req.params.id));

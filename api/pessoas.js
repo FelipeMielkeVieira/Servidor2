@@ -6,9 +6,9 @@ router.use(express.json());
 
 const pessoas = [
     {
-        id: 1,
         nome: "Felipe",
-        cpf: "123"
+        cpf: "123",
+        id: 1
     }
 ];
 

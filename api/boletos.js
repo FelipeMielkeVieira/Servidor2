@@ -16,13 +16,14 @@ function mostrarBoleto(id) {
 }
 
 function pegarPorPessoa(id) {
-    const listaBoletos2 = listaBoletos.listaBoletos.find(p => p.idPessoa == id);
-    return listaBoletos2;
-}
 
-function pegarPorUsuario(id) {
-    const listaBoletos2 = listaBoletos.listaBoletos.find(p => p.idUsuario == id);
-    return listaBoletos2;
+    const boletosPessoa = [];
+    listaBoletos.listaBoletos.forEach(function (e) {
+        if(e.idPessoa == id) {
+            boletosPessoa.push(e);
+        }
+    })
+    return boletosPessoa;
 }
 
 function buscarPessoa(id) {
@@ -44,6 +45,18 @@ function criarBoleto(boleto) {
 function editarBoleto(id, boleto) {
     const index = listaBoletos.listaBoletos.findIndex(p => p.id == id);
     boleto.id = id;
+
+    if(!boleto.status) {
+        boleto.status = listaBoletos.listaBoletos[index].status
+    }
+    if(!boleto.idPessoa) {
+        boleto.idPessoa = listaBoletos.listaBoletos[index].idPessoa
+        boleto.nomePessoa = listaBoletos.listaBoletos[index].nomePessoa
+    }
+    if(!boleto.idUsuario) {
+        boleto.idUsuario = listaBoletos.listaBoletos[index].idUsuario
+    }
+
     listaBoletos.listaBoletos[index] = boleto;
     return boleto;
 }
@@ -84,5 +97,4 @@ router.put('/:id', (req, res) => {
 module.exports = {
     router,
     pegarPorPessoa,
-    pegarPorUsuario
 }
