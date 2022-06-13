@@ -2,51 +2,27 @@ const express = require("express");
 const router = express.Router();
 const pessoa = require("./pessoas");
 const usuario = require("./usuarios");
+const listaBoletos = require("./listaBoletos")
 
 router.use(express.json());
 
 function mostrarBoletos() {
-    const boletos = [];
-    pessoa.boletosPessoas.forEach(function (e) {
-        boletos.push(e);
-    })
-    usuario.boletosUsuarios.forEach(function (e) {
-        boletos.push(e);
-    })
-
-    return boletos;
+    return listaBoletos.listaBoletos;
 }
 
 function mostrarBoleto(id) {
-    const boletos = [];
-    pessoa.boletosPessoas.forEach(function (e) {
-        boletos.push(e);
-    })
-    usuario.boletosUsuarios.forEach(function (e) {
-        boletos.push(e);
-    })
-
-    const boleto = boletos.find(p => p.id == id);
+    const boleto = listaBoletos.listaBoletos.find(p => p.id == id);
     return boleto;
 }
 
 function pegarPorPessoa(id) {
-    const boletos = [];
-    pessoa.boletosPessoas.forEach(function (e) {
-        boletos.push(e);
-    })
-
-    const listaBoletos = boletos.find(p => p.idPessoa == id);
-    return listaBoletos;
+    const listaBoletos2 = listaBoletos.listaBoletos.find(p => p.idPessoa == id);
+    return listaBoletos2;
 }
 
 function pegarPorUsuario(id) {
-    const boletos = [];
-    usuario.boletosUsuarios.forEach(function (e) {
-        boletos.push(e);
-    })
-    const listaBoletos = boletos.find(p => p.idUsuario == id);
-    return listaBoletos;
+    const listaBoletos2 = listaBoletos.listaBoletos.find(p => p.idUsuario == id);
+    return listaBoletos2;
 }
 
 function buscarPessoa(id) {
@@ -57,60 +33,18 @@ function buscarUsuario(id) {
     return usuario.mostrarUsuario(id);
 }
 
-function criarBoletoPessoa(boleto) {
-    const boletos = [];
-    pessoa.boletosPessoas.forEach(function (e) {
-        boletos.push(e);
-    })
-    usuario.boletosUsuarios.forEach(function (e) {
-        boletos.push(e);
-    })
-
-    boleto.id = boletos.length + 1;
+function criarBoleto(boleto) {
+    boleto.id = listaBoletos.listaBoletos.length + 1;
     boleto.status = "Em Aberto"
-    pessoa.boletosPessoas.push(boleto);
+    listaBoletos.listaBoletos.push(boleto);
     boleto.nomePessoa = buscarPessoa(boleto.idPessoa).nome;
     return boleto; 
 }
 
-function criarBoletoUsuario(boleto) {
-    const boletos = [];
-    pessoa.boletosPessoas.forEach(function (e) {
-        boletos.push(e);
-    })
-    usuario.boletosUsuarios.forEach(function (e) {
-        boletos.push(e);
-    })
-
-    boleto.nomePessoa = buscarUsuario(boleto.idUsuario).nome;
-    boleto.status = "Em Aberto"
-    boleto.id = boletos.length + 1;
-    usuario.boletosUsuarios.push(boleto);
-    return boleto; 
-}
-
 function editarBoleto(id, boleto) {
-    const boletos = [];
-    pessoa.boletosPessoas.forEach(function (e) {
-        boletos.push(e);
-    })
-    usuario.boletosUsuarios.forEach(function (e) {
-        boletos.push(e);
-    })
-
-    const boletoPessoa = boletos.find(p => p.idPessoa == id);
-    const boletoUsuario = boletos.find(p => p.idUsuario == id);
-    let index;
-
+    const index = listaBoletos.listaBoletos.findIndex(p => p.id == id);
     boleto.id = id;
-
-    if(boletoPessoa != null) {
-        index = pessoa.boletosPessoas.findIndex(p => p.idPessoa == id);
-        pessoa.boletosPessoas[index] = boleto;
-    } else {
-        index = usuario.boletosUsuarios.findIndex(p => p.idUsuario == id);
-        usuario.boletosUsuarios[index] = boleto;
-    }
+    listaBoletos.listaBoletos[index] = boleto;
     return boleto;
 }
 
@@ -129,18 +63,14 @@ router.get('/pessoa/:id', (req, res) => {
 
 router.post('/', (req, res) => {
     if(req.body.valor > 0) {
-        if(req.body.idPessoa) {
-            if(buscarPessoa(req.body.idPessoa) != null) {
-                res.send(criarBoletoPessoa(req.body));
+        if(req.body.idPessoa && req.body.idUsuario) {
+            if(buscarPessoa(req.body.idPessoa) != null && buscarUsuario(req.body.idUsuario) != null) {
+                res.send(criarBoleto(req.body));
             } else {
-                res.status(400).send("Pessoa Inválida!");
+                res.status(400).send("Pessoa ou usuário Inválida(o)!");
             }
         } else {
-            if(buscarUsuario(req.body.idUsuario) != null) {
-                res.send(criarBoletoUsuario(req.body));
-            } else {
-                res.status(400).send("Usuário Inválido!");
-            }
+            res.send("Preencha todos os campos!")
         }
     } else {
         res.status(400).send("Valor Inválido!");
